@@ -1,0 +1,21 @@
+<script>
+    // Double Size
+    doubleSize = (arr, b) => {
+        return arr.map(a => a == b ? b = (a * 2) : b).reverse()[0]
+    }
+    console.log(doubleSize([1, 2, 3, 4], 1))
+
+    // Array Left Rotate
+    arrayLRotate = (arr, t) => {
+        for (let i = 0; i < t; i++){arr.shift(arr.push(arr[0]));}       
+        return arr.indexOf(Math.max(...arr))
+    }
+
+    // Array Right Rotate
+    arrayRRotate = (arr, t) => {
+        for (let i = 0; i < t; i++){arr.pop(arr.unshift(arr[arr.length-1]));}       
+        return arr.indexOf(Math.max(...arr))
+    }
+    console.log(arrayLRotate([1, 2, 3, 4], 2))
+    console.log(arrayRRotate([1, 2, 3, 4], 3))
+</script>
