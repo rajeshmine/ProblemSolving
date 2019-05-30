@@ -1,0 +1,77 @@
+<style>
+
+    #list {
+        height: 500px;
+        overflow: auto;
+    }
+
+    #list>div {
+        border: 1px solid #ddd;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    p {
+        margin: 0
+    }
+
+    .highlight {
+        color: red;
+    }
+
+</style>
+
+<input type="text" id="filterinput" onkeyup="filter(this.value)">
+<div id="list">
+</div>
+
+<script>
+
+    let array = [];
+    var e = document.getElementById("list");
+
+    filter = async (value) => {
+        let arr = await array.filter(x => (x["employee_name"].toLowerCase().startsWith(value) || x["id"].startsWith(value) || x["employee_age"].startsWith(value) || x["employee_salary"].startsWith(value)))
+        await contentLoad(arr);
+        await highlight(value);
+    }
+
+    const contentLoad = (v) => {
+        e.innerHTML = '';
+        v.map(v => {
+            e.innerHTML += `
+                <div>
+                    <p class="match">${v.employee_name}</p>
+                    <p class="match">${v.id}</p>
+                    <p class="match">${v.employee_age}</p>
+                    <p class="match">${v.employee_salary}</p>
+                </div>
+                `;
+        })
+    }
+
+    (function () {
+        fetch('http://dummy.restapiexample.com/api/v1/employees')
+            .then(response => response.json())
+            .then(data => {
+                array = data
+                contentLoad(data);
+            })
+            .catch(error => console.error(error))
+    })();
+
+    var highlight = function (string) {
+        var all = document.getElementsByClassName("match");
+        for (var i = 0, max = all.length; i < max; i++) {
+            var matchStart = all[i].innerHTML.toLowerCase().indexOf("" + string.toLowerCase() + "");
+            if (matchStart >= 0) {
+                var matchEnd = matchStart + string.length - 1;
+                var beforeMatch = all[i].innerHTML.slice(0, matchStart);
+                var matchText = all[i].innerHTML.slice(matchStart, matchEnd + 1);
+                var afterMatch = all[i].innerHTML.slice(matchEnd + 1);
+                all[i].innerHTML = beforeMatch + "<em class='highlight'>" + matchText + "</em>" + afterMatch;
+            }
+        }
+    };
+
+</script>
